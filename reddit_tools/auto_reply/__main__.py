@@ -1,6 +1,7 @@
 import click
 import time
 from reddit_tools.utils import get_client
+import random
 
 
 @click.command()
@@ -11,13 +12,15 @@ def auto_reply(reply_user, reply_content):
 
     while True:
         print('Searching recent comments for user "{}".'.format(reply_user))
-        for comment in get_client().get_unread(limit=100):
+        for comment in get_client().inbox.unread():
             if str(comment.author) == str(reply_user):
                 print('\tFound comment, replying.')
                 comment.reply(reply_content)
-                comment.mark_as_read()
-        print('Sleeping for 1 minute.')
-        time.sleep(60)
+                comment.mark_read()
+                if 5 == random.choice(range(0,10,1)):
+                    comment.downvote()
+        print('Sleeping for 10 seconds.')
+        time.sleep(10)
 
 
 def main():

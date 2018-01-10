@@ -1,10 +1,17 @@
 import praw
 import OAuth2Util
+import json
+
+
+def get_creds():
+    with open('creds_file.json', 'r') as cred_file:
+        creds = json.loads(''.join(cred_file.readlines()))
+        
+    return creds
 
 
 def get_client():
-    reddit_client = praw.Reddit('A tool for reddit!')
-    oauth = OAuth2Util.OAuth2Util(reddit_client, configfile='oauth.ini')
-    oauth.refresh(force=True)
+    creds = get_creds()
+    reddit_client = praw.Reddit(**creds)
 
     return reddit_client
